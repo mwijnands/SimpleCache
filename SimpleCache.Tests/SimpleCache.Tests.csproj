@@ -58,7 +58,7 @@
     <Compile Include="CacheExtensionsTests.cs" />
     <Compile Include="Internal\CacheKeyGeneratorTests.cs" />
     <Compile Include="Internal\CacheLockTests.cs" />
-    <Compile Include="Test\IAcquirer.cs" />
+    <Compile Include="Test\PersonAcquirer.cs" />
     <Compile Include="Test\Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

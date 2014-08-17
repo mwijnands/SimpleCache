@@ -12,13 +12,21 @@ namespace XperiCode.SimpleCache.Tests
     {
         #region "Setup"
 
-        private Mock<IAcquirer> CreateAcquirerMock()
+        private Mock<PersonAcquirer> CreatePersonAcquirerMock()
         {
-            var acquirerMock = new Mock<IAcquirer>();
-            var person = new Person { Name = "John Doe", Age = 35 };
+            var acquirerMock = new Mock<PersonAcquirer>();
 
-            acquirerMock.Setup(a => a.Acquire<Person>()).Returns(person);
-            acquirerMock.Setup(a => a.AcquireAsync<Person>()).Returns(Task.FromResult(person));
+            acquirerMock
+                .Setup(a => a.Acquire<Person>())
+                .CallBase();
+
+            acquirerMock
+                .Setup(a => a.AcquireAsync<Person>())
+                .CallBase();
+            
+            acquirerMock
+                .Setup(a => a.LongRunningAcquireAsync<Person>())
+                .CallBase();
 
             return acquirerMock;
         }
@@ -33,7 +41,7 @@ namespace XperiCode.SimpleCache.Tests
         [TestMethod]
         public void GetFromCacheTwiceShouldCallAcquireOnlyOnce()
         {
-            var acquirerMock = CreateAcquirerMock();
+            var acquirerMock = CreatePersonAcquirerMock();
             var acquirer = acquirerMock.Object;
             var cache = CreateObjectCache();
             string cacheKey = "FindPerson";
@@ -45,9 +53,9 @@ namespace XperiCode.SimpleCache.Tests
         }
 
         [TestMethod]
-        public async Task GetFromCacheSyncAndAsyncShouldCallAcquireOnlyOnce()
+        public async Task GetFromCacheSyncAndAsyncShouldCallAcquireOnceAndAcquireAsyncNever()
         {
-            var acquirerMock = CreateAcquirerMock();
+            var acquirerMock = CreatePersonAcquirerMock();
             var acquirer = acquirerMock.Object;
             var cache = CreateObjectCache();
             string cacheKey = "FindPerson";
@@ -56,12 +64,13 @@ namespace XperiCode.SimpleCache.Tests
             await cache.GetAsync(cacheKey, acquirer.AcquireAsync<Person>);
 
             acquirerMock.Verify(a => a.Acquire<Person>(), Times.Once);
+            acquirerMock.Verify(a => a.AcquireAsync<Person>(), Times.Never);
         }
 
         [TestMethod]
         public void GetFromCacheTwiceShouldReturnSameObject()
         {
-            var acquirerMock = CreateAcquirerMock();
+            var acquirerMock = CreatePersonAcquirerMock();
             var acquirer = acquirerMock.Object;
             var cache = CreateObjectCache();
             string cacheKey = "FindPerson";
@@ -75,7 +84,7 @@ namespace XperiCode.SimpleCache.Tests
         [TestMethod]
         public async Task GetFromCacheSyncAndAsyncShouldReturnSameObject()
         {
-            var acquirerMock = CreateAcquirerMock();
+            var acquirerMock = CreatePersonAcquirerMock();
             var acquirer = acquirerMock.Object;
             var cache = CreateObjectCache();
             string cacheKey = "FindPerson";
@@ -86,7 +95,26 @@ namespace XperiCode.SimpleCache.Tests
             Assert.ReferenceEquals(person1, person2);
         }
 
-        // TODO: Add tests for expirationdate, expirationperiod and filemontitoring.
+        [TestMethod]
+        public async Task GetFromCacheConcurrentlyShouldCallLongRunningAcquireAsyncOnlyOnce()
+        {
+            var acquirerMock = CreatePersonAcquirerMock();
+            var acquirer = acquirerMock.Object;
+            var cache = CreateObjectCache();
+            string cacheKey = "FindPerson";
+
+            var person1Task = cache.GetAsync(cacheKey, acquirer.LongRunningAcquireAsync<Person>);
+            var person2Task = cache.GetAsync(cacheKey, acquirer.LongRunningAcquireAsync<Person>);
+            var person3Task = cache.GetAsync(cacheKey, acquirer.LongRunningAcquireAsync<Person>);
+            var person4Task = cache.GetAsync(cacheKey, acquirer.LongRunningAcquireAsync<Person>);
+            var person5Task = cache.GetAsync(cacheKey, acquirer.LongRunningAcquireAsync<Person>);
+
+            await Task.WhenAll(person1Task, person2Task, person3Task, person4Task, person5Task);
+
+            acquirerMock.Verify(a => a.LongRunningAcquireAsync<Person>(), Times.Once);
+        }
+
+        // TODO: Add tests for expirationdate, expirationperiod and filemonitoring.
 
         // TODO: Add tests for locking mechanism by executing cache get methods concurrently
         //       with a long running acquire method and checking of acquire was called
