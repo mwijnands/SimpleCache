@@ -42,8 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheExtensions.cs" />
-    <Compile Include="CacheKeyGenerator.cs" />
-    <Compile Include="CacheLock.cs" />
+    <Compile Include="Internal\CacheKeyGenerator.cs" />
+    <Compile Include="Internal\CacheLock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

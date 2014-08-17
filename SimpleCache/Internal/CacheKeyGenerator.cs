@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 
-namespace XperiCode.SimpleCache
+namespace XperiCode.SimpleCache.Internal
 {
-    public static class CacheKeyGenerator
+    internal static class CacheKeyGenerator
     {
         public static string GenerateCacheKey<T>(string key)
         {

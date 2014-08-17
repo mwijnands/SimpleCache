@@ -3,9 +3,9 @@ using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace XperiCode.SimpleCache
+namespace XperiCode.SimpleCache.Internal
 {
-    public class CacheLock : IDisposable
+    internal class CacheLock : IDisposable
     {
         private static readonly ConcurrentDictionary<string, SemaphoreSlim> _locks;
         private readonly SemaphoreSlim _lock;

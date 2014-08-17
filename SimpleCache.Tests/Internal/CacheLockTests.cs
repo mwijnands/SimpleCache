@@ -1,14 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace XperiCode.SimpleCache.Tests
+namespace XperiCode.SimpleCache.Tests.Internal
 {
     [TestClass]
     public class CacheLockTests
     {
-        [TestMethod]
-        public void TestMethod1()
-        {
-        }
     }
 }
