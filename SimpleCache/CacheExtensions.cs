@@ -9,6 +9,11 @@ namespace XperiCode.SimpleCache
 {
     public static class CacheExtensions
     {
+        // TODO: Add public methods to clear cache for specific type 
+        //       or remove item for specific type by key.
+
+        // TODO: Add public IsSet method for specific type and key.
+
         public static T Get<T>(this ObjectCache cache, string key, Func<T> acquire)
         {
             return Get(cache, key, acquire, (cacheKey, acquiredValue) => 

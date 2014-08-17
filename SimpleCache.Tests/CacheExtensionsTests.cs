@@ -86,6 +86,10 @@ namespace XperiCode.SimpleCache.Tests
             Assert.ReferenceEquals(person1, person2);
         }
 
-        // TODO: Execute cache get methods concurrently with a long running acquirer method to test cachelock.
+        // TODO: Add tests for expirationdate, expirationperiod and filemontitoring.
+
+        // TODO: Add tests for locking mechanism by executing cache get methods concurrently
+        //       with a long running acquire method and checking of acquire was called
+        //       only once.
     }
 }
