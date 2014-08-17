@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheExtensions.cs" />
+    <Compile Include="CacheKeyGenerator.cs" />
     <Compile Include="CacheLock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

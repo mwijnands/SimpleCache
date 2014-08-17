@@ -15,16 +15,16 @@ namespace XperiCode.SimpleCache
             _locks = new ConcurrentDictionary<string, SemaphoreSlim>();
         }
 
-        public static CacheLock Lock(string key, string regionName)
+        public static CacheLock Lock(string uniqueKey)
         {
-            var myLock = Create(key, regionName);
+            var myLock = new CacheLock(uniqueKey);
             myLock.Wait();
             return myLock;
         }
 
-        public async static Task<CacheLock> LockAsync(string key, string regionName)
+        public async static Task<CacheLock> LockAsync(string uniqueKey)
         {
-            var myLock = Create(key, regionName);
+            var myLock = new CacheLock(uniqueKey);
             await myLock.WaitAsync();
             return myLock;
         }
@@ -33,18 +33,6 @@ namespace XperiCode.SimpleCache
         {
             _locks.TryAdd(uniqueKey, new SemaphoreSlim(1, 1));
             _lock = _locks[uniqueKey];
-        }
-  
-        private static CacheLock Create(string key, string regionName)
-        {
-            var uniqueKey = GenerateUniqueKey(key, regionName);
-            var myLock = new CacheLock(uniqueKey);
-            return myLock;
-        }
-  
-        private static string GenerateUniqueKey(string key, string regionName)
-        {
-            return string.Format("[{0}][{1}]", regionName, key);
         }
 
         private void Wait()

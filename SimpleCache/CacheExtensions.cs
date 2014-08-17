@@ -10,23 +10,23 @@ namespace XperiCode.SimpleCache
     {
         public static T Get<T>(this ObjectCache cache, string key, Func<T> acquire)
         {
-            string regionName = typeof(T).FullName;
+            string cacheKey = CacheKeyGenerator.GenerateCacheKey<T>(key);
 
-            if (cache.IsSet(key, regionName))
+            if (cache.IsSet(cacheKey))
             {
-                return (T)cache.Get(key, regionName);
+                return (T)cache.Get(cacheKey);
             }
 
-            using (CacheLock.Lock(key, regionName))
+            using (CacheLock.Lock(cacheKey))
             {
-                if (cache.IsSet(key, regionName))
+                if (cache.IsSet(cacheKey))
                 {
-                    return (T)cache.Get(key, regionName);
+                    return (T)cache.Get(cacheKey);
                 }
 
                 var result = acquire();
 
-                cache.Set(key, result, null, regionName);
+                cache.Set(cacheKey, result, null);
 
                 return result;
             }
@@ -34,23 +34,23 @@ namespace XperiCode.SimpleCache
 
         public static async Task<T> GetAsync<T>(this ObjectCache cache, string key, Func<Task<T>> acquire)
         {
-            string regionName = typeof(T).FullName;
+            string cacheKey = CacheKeyGenerator.GenerateCacheKey<T>(key);
 
-            if (cache.IsSet(key, regionName))
+            if (cache.IsSet(cacheKey))
             {
-                return (T)cache.Get(key, regionName);
+                return (T)cache.Get(cacheKey);
             }
 
-            using (await CacheLock.LockAsync(key, regionName))
+            using (await CacheLock.LockAsync(cacheKey))
             {
-                if (cache.IsSet(key, regionName))
+                if (cache.IsSet(cacheKey))
                 {
-                    return (T)cache.Get(key, regionName);
+                    return (T)cache.Get(cacheKey);
                 }
 
                 var result = await acquire();
 
-                cache.Set(key, result, null, regionName);
+                cache.Set(cacheKey, result, null);
 
                 return result;
             }
@@ -58,23 +58,23 @@ namespace XperiCode.SimpleCache
 
         public static T Get<T>(this ObjectCache cache, string key, DateTime expirationDate, Func<T> acquire)
         {
-            string regionName = typeof(T).FullName;
+            string cacheKey = CacheKeyGenerator.GenerateCacheKey<T>(key);
 
-            if (cache.IsSet(key, regionName))
+            if (cache.IsSet(cacheKey))
             {
-                return (T)cache.Get(key, regionName);
+                return (T)cache.Get(cacheKey);
             }
 
-            using (CacheLock.Lock(key, regionName))
+            using (CacheLock.Lock(cacheKey))
             {
-                if (cache.IsSet(key, regionName))
+                if (cache.IsSet(cacheKey))
                 {
-                    return (T)cache.Get(key, regionName);
+                    return (T)cache.Get(cacheKey);
                 }
 
                 var result = acquire();
 
-                cache.Set(key, result, expirationDate, regionName);
+                cache.Set(cacheKey, result, expirationDate);
 
                 return result;
             }
@@ -82,23 +82,23 @@ namespace XperiCode.SimpleCache
 
         public static async Task<T> GetAsync<T>(this ObjectCache cache, string key, DateTime expirationDate, Func<Task<T>> acquire)
         {
-            string regionName = typeof(T).FullName;
+            string cacheKey = CacheKeyGenerator.GenerateCacheKey<T>(key);
 
-            if (cache.IsSet(key, regionName))
+            if (cache.IsSet(cacheKey))
             {
-                return (T)cache.Get(key, regionName);
+                return (T)cache.Get(cacheKey);
             }
 
-            using (await CacheLock.LockAsync(key, regionName))
+            using (await CacheLock.LockAsync(cacheKey))
             {
-                if (cache.IsSet(key, regionName))
+                if (cache.IsSet(cacheKey))
                 {
-                    return (T)cache.Get(key, regionName);
+                    return (T)cache.Get(cacheKey);
                 }
 
                 var result = await acquire();
 
-                cache.Set(key, result, expirationDate, regionName);
+                cache.Set(cacheKey, result, expirationDate);
 
                 return result;
             }
@@ -106,23 +106,23 @@ namespace XperiCode.SimpleCache
 
         public static T Get<T>(this ObjectCache cache, string key, TimeSpan expirationPeriod, Func<T> acquire)
         {
-            string regionName = typeof(T).FullName;
+            string cacheKey = CacheKeyGenerator.GenerateCacheKey<T>(key);
 
-            if (cache.IsSet(key, regionName))
+            if (cache.IsSet(cacheKey))
             {
-                return (T)cache.Get(key, regionName);
+                return (T)cache.Get(cacheKey);
             }
 
-            using (CacheLock.Lock(key, regionName))
+            using (CacheLock.Lock(cacheKey))
             {
-                if (cache.IsSet(key, regionName))
+                if (cache.IsSet(cacheKey))
                 {
-                    return (T)cache.Get(key, regionName);
+                    return (T)cache.Get(cacheKey);
                 }
 
                 var result = acquire();
 
-                cache.Set(key, result, DateTime.Now.Add(expirationPeriod), regionName);
+                cache.Set(cacheKey, result, DateTime.Now.Add(expirationPeriod));
 
                 return result;
             }
@@ -130,23 +130,23 @@ namespace XperiCode.SimpleCache
 
         public static async Task<T> GetAsync<T>(this ObjectCache cache, string key, TimeSpan expirationPeriod, Func<Task<T>> acquire)
         {
-            string regionName = typeof(T).FullName;
+            string cacheKey = CacheKeyGenerator.GenerateCacheKey<T>(key);
 
-            if (cache.IsSet(key, regionName))
+            if (cache.IsSet(cacheKey))
             {
-                return (T)cache.Get(key, regionName);
+                return (T)cache.Get(cacheKey);
             }
 
-            using (await CacheLock.LockAsync(key, regionName))
+            using (await CacheLock.LockAsync(cacheKey))
             {
-                if (cache.IsSet(key, regionName))
+                if (cache.IsSet(cacheKey))
                 {
-                    return (T)cache.Get(key, regionName);
+                    return (T)cache.Get(cacheKey);
                 }
 
                 var result = await acquire();
 
-                cache.Set(key, result, DateTime.Now.Add(expirationPeriod), regionName);
+                cache.Set(cacheKey, result, DateTime.Now.Add(expirationPeriod));
 
                 return result;
             }
@@ -154,18 +154,18 @@ namespace XperiCode.SimpleCache
 
         public static T Get<T>(this ObjectCache cache, string key, FileInfo fileInfo, Func<T> acquire)
         {
-            string regionName = typeof(T).FullName;
+            string cacheKey = CacheKeyGenerator.GenerateCacheKey<T>(key);
 
-            if (cache.IsSet(key, regionName))
+            if (cache.IsSet(cacheKey))
             {
-                return (T)cache.Get(key, regionName);
+                return (T)cache.Get(cacheKey);
             }
 
-            using (CacheLock.Lock(key, regionName))
+            using (CacheLock.Lock(cacheKey))
             {
-                if (cache.IsSet(key, regionName))
+                if (cache.IsSet(cacheKey))
                 {
-                    return (T)cache.Get(key, regionName);
+                    return (T)cache.Get(cacheKey);
                 }
 
                 var result = acquire();
@@ -173,7 +173,7 @@ namespace XperiCode.SimpleCache
                 var policy = new CacheItemPolicy();
                 policy.ChangeMonitors.Add(new HostFileChangeMonitor(new List<string> { fileInfo.FullName }));
 
-                cache.Set(key, result, policy, regionName);
+                cache.Set(cacheKey, result, policy);
 
                 return result;
             }
@@ -181,18 +181,18 @@ namespace XperiCode.SimpleCache
 
         public static async Task<T> GetAsync<T>(this ObjectCache cache, string key, FileInfo fileInfo, Func<Task<T>> acquire)
         {
-            string regionName = typeof(T).FullName;
+            string cacheKey = CacheKeyGenerator.GenerateCacheKey<T>(key);
 
-            if (cache.IsSet(key, regionName))
+            if (cache.IsSet(cacheKey))
             {
-                return (T)cache.Get(key, regionName);
+                return (T)cache.Get(cacheKey);
             }
 
-            using (await CacheLock.LockAsync(key, regionName))
+            using (await CacheLock.LockAsync(cacheKey))
             {
-                if (cache.IsSet(key, regionName))
+                if (cache.IsSet(cacheKey))
                 {
-                    return (T)cache.Get(key, regionName);
+                    return (T)cache.Get(cacheKey);
                 }
 
                 var result = await acquire();
@@ -200,21 +200,15 @@ namespace XperiCode.SimpleCache
                 var policy = new CacheItemPolicy();
                 policy.ChangeMonitors.Add(new HostFileChangeMonitor(new List<string> { fileInfo.FullName }));
 
-                cache.Set(key, result, policy, regionName);
+                cache.Set(cacheKey, result, policy);
 
                 return result;
             }
         }
 
-        public static bool IsSet<T>(this ObjectCache cache, string key)
+        private static bool IsSet(this ObjectCache cache, string cacheKey)
         {
-            string regionName = typeof(T).FullName;
-            return cache.IsSet(key, regionName);
-        }
-
-        private static bool IsSet(this ObjectCache cache, string key, string regionName)
-        {
-            return cache.Contains(key, regionName);
+            return cache.Contains(cacheKey);
         }
     }
 }
