@@ -18,8 +18,17 @@ Same as above but the value will stay in the cache for only 15 minutes:
 var person = MemoryCache.Default.Get("Find", TimeSpan.FromMinutes(15), () => _personRepository.Find());
 ```
 
-There are methods available to invalidate cache at an absolute expirationdate or when a certain file has changed as well. For all these methods there are async versions available in case the acquire method is async:
+There are methods available to invalidate cache at an absolute expirationdate or when a certain file has changed as well. For all these methods there are `async` versions available in case the acquire method is `async`:
 
 ```csharp
 var person = await MemoryCache.Default.GetAsync("Find", () => _personRepository.FindAsync());
+```
+
+If the acquire method takes a long time to finish, the extension methods take care of locking (even the `async` versions) so the acquire method will not be called multiple times after the value is acquired. So if 10 visitors would visit a webpage with the following code at the same time, the `LongRunningMethod` method will only be called once:
+
+```csharp
+var person = await MemoryCache.Default.GetAsync("Find", () => {
+    LongRunningMethod();
+    return _personRepository.FindAsync());
+}
 ```
