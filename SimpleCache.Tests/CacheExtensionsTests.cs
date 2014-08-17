@@ -115,9 +115,5 @@ namespace XperiCode.SimpleCache.Tests
         }
 
         // TODO: Add tests for expirationdate, expirationperiod and filemonitoring.
-
-        // TODO: Add tests for locking mechanism by executing cache get methods concurrently
-        //       with a long running acquire method and checking of acquire was called
-        //       only once.
     }
 }
