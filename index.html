@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="SimpleCache : Extension methods for System.Runtime.Caching.ObjectCache / MemoryCache with locking mechanism.">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>SimpleCache</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/MarcelW81/SimpleCache">View on GitHub</a>
+
+          <h1 id="project_title">SimpleCache</h1>
+          <h2 id="project_tagline">Extension methods for System.Runtime.Caching.ObjectCache / MemoryCache with locking mechanism.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/MarcelW81/SimpleCache/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/MarcelW81/SimpleCache/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="simplecache" class="anchor" href="#simplecache"><span class="octicon octicon-link"></span></a>SimpleCache</h1>
+
+<ul>
+<li>Allows you to check if some value exists in cache and if not, acquire the value and put it in cache, using 1 method call.</li>
+<li>Takes care of locking while the value is being acquired when it does not yet exist in cache.</li>
+<li>Generates cachekeys including the type name being cached so you can use the same key (ie FindAll) for different types.</li>
+</ul><h2>
+<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h2>
+
+<p>Get a value from cache and if it does not exist in cache yet, acquire it and put it in cache:</p>
+
+<div class="highlight highlight-csharp"><pre><span class="kt">var</span> <span class="n">person</span> <span class="p">=</span> <span class="n">MemoryCache</span><span class="p">.</span><span class="n">Default</span><span class="p">.</span><span class="n">Get</span><span class="p">(</span><span class="s">"Find"</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="n">_personRepository</span><span class="p">.</span><span class="n">Find</span><span class="p">());</span>
+</pre></div>
+
+<p>Same as above but the value will stay in the cache for only 15 minutes:</p>
+
+<div class="highlight highlight-csharp"><pre><span class="kt">var</span> <span class="n">person</span> <span class="p">=</span> <span class="n">MemoryCache</span><span class="p">.</span><span class="n">Default</span><span class="p">.</span><span class="n">Get</span><span class="p">(</span><span class="s">"Find"</span><span class="p">,</span> <span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromMinutes</span><span class="p">(</span><span class="m">15</span><span class="p">),</span> <span class="p">()</span> <span class="p">=&gt;</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">_personRepository</span><span class="p">.</span><span class="n">Find</span><span class="p">();</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>There are methods available to invalidate cache at an absolute expirationdate or when a certain file has changed as well. For all these methods there are <code>async</code> versions available in case the acquire method is <code>async</code>:</p>
+
+<div class="highlight highlight-csharp"><pre><span class="kt">var</span> <span class="n">person</span> <span class="p">=</span> <span class="k">await</span> <span class="n">MemoryCache</span><span class="p">.</span><span class="n">Default</span><span class="p">.</span><span class="n">GetAsync</span><span class="p">(</span><span class="s">"Find"</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> 
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">_personRepository</span><span class="p">.</span><span class="n">FindAsync</span><span class="p">();</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>If the acquire method takes a long time to finish, the extension methods take care of locking (even the <code>async</code> versions) so the acquire method will not be called multiple times after the value is acquired. So if 10 visitors would visit a webpage with the following code at the same time, the <code>SomeLongRunningMethod</code> method and <code>_personRepository.Find()</code> call will only be called <strong>once</strong>:</p>
+
+<div class="highlight highlight-csharp"><pre><span class="kt">var</span> <span class="n">person</span> <span class="p">=</span> <span class="n">MemoryCache</span><span class="p">.</span><span class="n">Default</span><span class="p">.</span><span class="n">Get</span><span class="p">(</span><span class="s">"Find"</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="n">SomeLongRunningMethod</span><span class="p">();</span>
+    <span class="k">return</span> <span class="n">_personRepository</span><span class="p">.</span><span class="n">Find</span><span class="p">();</span>
+<span class="p">});</span>
+</pre></div>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">SimpleCache maintained by <a href="https://github.com/MarcelW81">MarcelW81</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
