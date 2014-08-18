@@ -115,5 +115,6 @@ namespace XperiCode.SimpleCache.Tests
         }
 
         // TODO: Add tests for expirationdate, expirationperiod and filemonitoring.
+        //       Also add tests for removing cacheentries and clearing cache for specific types.
     }
 }

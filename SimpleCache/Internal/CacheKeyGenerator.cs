@@ -7,7 +7,19 @@ namespace XperiCode.SimpleCache.Internal
     {
         public static string GenerateCacheKey<T>(string key)
         {
-            return string.Format("[{0}][{1}]", typeof(T).FullName, key);
+            string cacheKeyPrefix = CreateCacheKeyPrefix<T>();
+            return string.Format("{0}[{1}]", cacheKeyPrefix, key);
+        }
+
+        public static bool IsGeneratedCacheKey<T>(string cacheKey)
+        {
+            string cacheKeyPrefix = CreateCacheKeyPrefix<T>();
+            return cacheKey.StartsWith(cacheKeyPrefix);
+        }
+  
+        private static string CreateCacheKeyPrefix<T>()
+        {
+            return string.Format("XperiCode.SimpleCache-[{0}]", typeof(T).FullName);
         }
     }
 }

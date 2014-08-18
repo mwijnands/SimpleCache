@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
 using XperiCode.SimpleCache.Internal;
@@ -9,14 +10,9 @@ namespace XperiCode.SimpleCache
 {
     public static class CacheExtensions
     {
-        // TODO: Add public methods to clear cache for specific type 
-        //       or remove item for specific type by key.
-
-        // TODO: Add public IsSet method for specific type and key.
-
         public static T Get<T>(this ObjectCache cache, string key, Func<T> acquire)
         {
-            return Get(cache, key, acquire, (cacheKey, acquiredValue) => 
+            return Get(cache, key, acquire, (cacheKey, acquiredValue) =>
             {
                 cache.Set(cacheKey, acquiredValue, null);
             });
@@ -24,7 +20,7 @@ namespace XperiCode.SimpleCache
 
         public static Task<T> GetAsync<T>(this ObjectCache cache, string key, Func<Task<T>> acquireAsync)
         {
-            return GetAsync(cache, key, acquireAsync, (cacheKey, acquiredValue) => 
+            return GetAsync(cache, key, acquireAsync, (cacheKey, acquiredValue) =>
             {
                 cache.Set(cacheKey, acquiredValue, null);
             });
@@ -32,7 +28,7 @@ namespace XperiCode.SimpleCache
 
         public static T Get<T>(this ObjectCache cache, string key, DateTime expirationDate, Func<T> acquire)
         {
-            return Get(cache, key, acquire, (cacheKey, acquiredValue) => 
+            return Get(cache, key, acquire, (cacheKey, acquiredValue) =>
             {
                 cache.Set(cacheKey, acquiredValue, expirationDate);
             });
@@ -40,7 +36,7 @@ namespace XperiCode.SimpleCache
 
         public static Task<T> GetAsync<T>(this ObjectCache cache, string key, DateTime expirationDate, Func<Task<T>> acquireAsync)
         {
-            return GetAsync(cache, key, acquireAsync, (cacheKey, acquiredValue) => 
+            return GetAsync(cache, key, acquireAsync, (cacheKey, acquiredValue) =>
             {
                 cache.Set(cacheKey, acquiredValue, expirationDate);
             });
@@ -48,7 +44,7 @@ namespace XperiCode.SimpleCache
 
         public static T Get<T>(this ObjectCache cache, string key, TimeSpan expirationPeriod, Func<T> acquire)
         {
-            return Get(cache, key, acquire, (cacheKey, acquiredValue) => 
+            return Get(cache, key, acquire, (cacheKey, acquiredValue) =>
             {
                 cache.Set(cacheKey, acquiredValue, DateTime.Now.Add(expirationPeriod));
             });
@@ -56,7 +52,7 @@ namespace XperiCode.SimpleCache
 
         public static Task<T> GetAsync<T>(this ObjectCache cache, string key, TimeSpan expirationPeriod, Func<Task<T>> acquireAsync)
         {
-            return GetAsync(cache, key, acquireAsync, (cacheKey, acquiredValue) => 
+            return GetAsync(cache, key, acquireAsync, (cacheKey, acquiredValue) =>
             {
                 cache.Set(cacheKey, acquiredValue, DateTime.Now.Add(expirationPeriod));
             });
@@ -64,24 +60,44 @@ namespace XperiCode.SimpleCache
 
         public static T Get<T>(this ObjectCache cache, string key, FileInfo fileInfo, Func<T> acquire)
         {
-            return Get(cache, key, acquire, (cacheKey, acquiredValue) => 
+            return Get(cache, key, acquire, (cacheKey, acquiredValue) =>
             {
                 var policy = new CacheItemPolicy();
                 policy.ChangeMonitors.Add(new HostFileChangeMonitor(new List<string> { fileInfo.FullName }));
-                
+
                 cache.Set(cacheKey, acquiredValue, policy);
             });
         }
 
         public static Task<T> GetAsync<T>(this ObjectCache cache, string key, FileInfo fileInfo, Func<Task<T>> acquireAsync)
         {
-            return GetAsync(cache, key, acquireAsync, (cacheKey, acquiredValue) => 
+            return GetAsync(cache, key, acquireAsync, (cacheKey, acquiredValue) =>
             {
                 var policy = new CacheItemPolicy();
                 policy.ChangeMonitors.Add(new HostFileChangeMonitor(new List<string> { fileInfo.FullName }));
-                
+
                 cache.Set(cacheKey, acquiredValue, policy);
             });
+        }
+
+        public static bool IsSet<T>(this ObjectCache cache, string key)
+        {
+            string cacheKey = CacheKeyGenerator.GenerateCacheKey<T>(key);
+            return cache.IsSet(cacheKey);
+        }
+
+        public static void Remove<T>(this ObjectCache cache, string key)
+        {
+            string cacheKey = CacheKeyGenerator.GenerateCacheKey<T>(key);
+            cache.Remove(cacheKey);
+        }
+
+        public static void Clear<T>(this ObjectCache cache)
+        {
+            foreach (var entry in cache.Where(entry => CacheKeyGenerator.IsGeneratedCacheKey<T>(entry.Key)))
+            {
+                cache.Remove(entry.Key);
+            }
         }
 
         private static T Get<T>(this ObjectCache cache, string key, Func<T> acquire, Action<string, object> set)
