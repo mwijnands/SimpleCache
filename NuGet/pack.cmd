@@ -1,0 +1,1 @@
+nuget pack ../SimpleCache/SimpleCache.csproj -Build -Prop Configuration=Release
