@@ -64,7 +64,8 @@
 
 <p>If the acquire method takes a long time to finish, the extension methods take care of locking (even the <code>async</code> versions) so the acquire method will not be called multiple times after the value is acquired. So if 10 visitors would visit a webpage with the following code at the same time, the <code>SomeLongRunningMethod</code> method and <code>_personRepository.Find()</code> call will only be called <strong>once</strong>:</p>
 
-<div class="highlight highlight-csharp"><pre><span class="kt">var</span> <span class="n">person</span> <span class="p">=</span> <span class="n">MemoryCache</span><span class="p">.</span><span class="n">Default</span><span class="p">.</span><span class="n">Get</span><span class="p">(</span><span class="s">"Find"</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+<div class="highlight highlight-csharp"><pre><span class="kt">var</span> <span class="n">person</span> <span class="p">=</span> <span class="n">MemoryCache</span><span class="p">.</span><span class="n">Default</span><span class="p">.</span><span class="n">Get</span><span class="p">(</span><span class="s">"Find"</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> 
+<span class="p">{</span>
     <span class="n">SomeLongRunningMethod</span><span class="p">();</span>
     <span class="k">return</span> <span class="n">_personRepository</span><span class="p">.</span><span class="n">Find</span><span class="p">();</span>
 <span class="p">});</span>
