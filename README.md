@@ -1,3 +1,5 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/sv8anhe78ois7n6v)](https://ci.appveyor.com/project/mwijnands/simplecache)
+
 # SimpleCache #
 
 - Allows you to check if some value exists in cache and if not, acquire the value and put it in cache, using 1 method call.
@@ -39,3 +41,7 @@ var person = MemoryCache.Default.Get("Find", () =>
     return _personRepository.Find();
 });
 ```
+
+### Project page ###
+
+http://simplecache.xpericode.com/
