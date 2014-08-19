@@ -4,11 +4,14 @@
     <id>$id$</id>
     <title>SimpleCache</title>
     <version>$version$</version>
-    <authors>$author$</authors>
+    <authors>Marcel Wijnands</authors>
     <projectUrl>http://simplecache.xpericode.com/</projectUrl>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
     <description>$description$</description>
     <copyright>$copyright$</copyright>
     <tags>Cache ObjectCache MemoryCache</tags>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.Runtime.Caching" targetFramework="net45" />
+    </frameworkAssemblies>  
   </metadata>
 </package>
