@@ -33,7 +33,8 @@ var person = await MemoryCache.Default.GetAsync("Find", () =>
 If the acquire method takes a long time to finish, the extension methods take care of locking (even the `async` versions) so the acquire method will not be called multiple times after the value is acquired. So if 10 visitors would visit a webpage with the following code at the same time, the `SomeLongRunningMethod` method and `_personRepository.Find()` call will only be called **once**:
 
 ```csharp
-var person = MemoryCache.Default.Get("Find", () => {
+var person = MemoryCache.Default.Get("Find", () =>
+{
     SomeLongRunningMethod();
     return _personRepository.Find();
 });
