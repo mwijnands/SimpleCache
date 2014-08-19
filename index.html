@@ -38,7 +38,9 @@
 <li>Allows you to check if some value exists in cache and if not, acquire the value and put it in cache, using 1 method call.</li>
 <li>Takes care of locking while the value is being acquired when it does not yet exist in cache.</li>
 <li>Generates cachekeys including the type name being cached so you can use the same key (ie FindAll) for different types.</li>
-</ul><h2>
+</ul><p><a href="https://ci.appveyor.com/project/mwijnands/simplecache"><img src="https://ci.appveyor.com/api/projects/status/sv8anhe78ois7n6v" alt="Build status"></a></p>
+
+<h2>
 <a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h2>
 
 <p>Get a value from cache and if it does not exist in cache yet, acquire it and put it in cache:</p>
@@ -70,8 +72,6 @@
     <span class="k">return</span> <span class="n">_personRepository</span><span class="p">.</span><span class="n">Find</span><span class="p">();</span>
 <span class="p">});</span>
 </pre></div>
-
-<p><a href="https://ci.appveyor.com/project/mwijnands/simplecache"><img src="https://ci.appveyor.com/api/projects/status/sv8anhe78ois7n6v" alt="Build status"></a></p>
       </section>
     </div>
 
