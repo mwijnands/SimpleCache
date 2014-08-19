@@ -1,10 +1,10 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/sv8anhe78ois7n6v)](https://ci.appveyor.com/project/mwijnands/simplecache)
-
 # SimpleCache #
 
 - Allows you to check if some value exists in cache and if not, acquire the value and put it in cache, using 1 method call.
 - Takes care of locking while the value is being acquired when it does not yet exist in cache.
 - Generates cachekeys including the type name being cached so you can use the same key (ie FindAll) for different types.
+
+[![Build status](https://ci.appveyor.com/api/projects/status/sv8anhe78ois7n6v)](https://ci.appveyor.com/project/mwijnands/simplecache)
 
 ## Examples ##
 
