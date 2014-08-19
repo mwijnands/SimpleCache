@@ -14,7 +14,7 @@ namespace XperiCode.SimpleCache.Tests.Internal
             string personTypeFullName = typeof(Person).FullName;
             string key = "FindPerson";
 
-            string expectedCacheKey = string.Format("[{0}][{1}]", personTypeFullName, key);
+            string expectedCacheKey = string.Format("XperiCode.SimpleCache-[{0}][{1}]", personTypeFullName, key);
             string cacheKey = CacheKeyGenerator.GenerateCacheKey<Person>(key);
 
             Assert.AreEqual(expectedCacheKey, cacheKey);
