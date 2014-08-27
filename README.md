@@ -4,7 +4,7 @@
 - Takes care of locking while the value is being acquired when it does not yet exist in cache.
 - Generates cachekeys including the type name being cached so you can use the same key (ie FindAll) for different types.
 
-[![Build status](https://ci.appveyor.com/api/projects/status/sv8anhe78ois7n6v)](https://ci.appveyor.com/project/mwijnands/simplecache)
+[![Build status](http://img.shields.io/appveyor/ci/mwijnands/simplecache.svg?style=flat)](https://ci.appveyor.com/project/mwijnands/simplecache) [![NuGet version](http://img.shields.io/nuget/v/XperiCode.SimpleCache.svg?style=flat)](https://www.nuget.org/packages/XperiCode.SimpleCache)
 
 ## Examples ##
 
