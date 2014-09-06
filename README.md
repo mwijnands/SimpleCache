@@ -45,3 +45,5 @@ var person = MemoryCache.Default.Get("Find", () =>
 ### Project page ###
 
 http://simplecache.xpericode.com/
+
+Please report issues if you find any. Pull requests are welcome!
