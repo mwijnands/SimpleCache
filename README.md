@@ -1,4 +1,4 @@
-# SimpleCache #
+# SimpleCache
 
 - Allows you to check if some value exists in cache and if not, acquire the value and put it in cache, using 1 method call.
 - Takes care of locking while the value is being acquired when it does not yet exist in cache.
@@ -6,7 +6,13 @@
 
 [![Build status](http://img.shields.io/appveyor/ci/mwijnands/simplecache.svg?style=flat)](https://ci.appveyor.com/project/mwijnands/simplecache) [![NuGet version](http://img.shields.io/nuget/v/XperiCode.SimpleCache.svg?style=flat)](https://www.nuget.org/packages/XperiCode.SimpleCache)
 
-## Examples ##
+## Installation
+
+The `SimpleCache` package is available at [NuGet](https://www.nuget.org/packages/XperiCode.SimpleCache). To install `SimpleCache`, run the following command in the [Package Manager Console](http://docs.nuget.org/docs/start-here/using-the-package-manager-console):
+
+> #### Install-Package XperiCode.SimpleCache
+
+## Examples
 
 Get a value from cache and if it does not exist in cache yet, acquire it and put it in cache:
 
@@ -42,7 +48,7 @@ var person = MemoryCache.Default.Get("Find", () =>
 });
 ```
 
-### Project page ###
+## Project page
 
 http://simplecache.xpericode.com/
 
