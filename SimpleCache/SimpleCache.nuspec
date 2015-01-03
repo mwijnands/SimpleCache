@@ -7,6 +7,7 @@
     <authors>Marcel Wijnands</authors>
     <projectUrl>http://simplecache.xpericode.com/</projectUrl>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+	<iconUrl>https://avatars3.githubusercontent.com/u/8470969?v=3&s=48</iconUrl>
     <description>$description$</description>
     <copyright>$copyright$</copyright>
     <tags>Cache ObjectCache MemoryCache</tags>
