@@ -32,48 +32,59 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         <h1>
-<a name="simplecache" class="anchor" href="#simplecache"><span class="octicon octicon-link"></span></a>SimpleCache</h1>
+<a id="simplecache" class="anchor" href="#simplecache" aria-hidden="true"><span class="octicon octicon-link"></span></a>SimpleCache</h1>
 
 <ul>
 <li>Allows you to check if some value exists in cache and if not, acquire the value and put it in cache, using 1 method call.</li>
 <li>Takes care of locking while the value is being acquired when it does not yet exist in cache.</li>
 <li>Generates cachekeys including the type name being cached so you can use the same key (ie FindAll) for different types.</li>
-</ul><p><a href="https://ci.appveyor.com/project/mwijnands/simplecache"><img src="http://img.shields.io/appveyor/ci/mwijnands/simplecache.svg?style=flat" alt="Build status"></a> <a href="https://www.nuget.org/packages/XperiCode.SimpleCache"><img src="http://img.shields.io/nuget/v/XperiCode.SimpleCache.svg?style=flat" alt="NuGet version"></a></p>
+</ul>
+
+<p><a href="https://ci.appveyor.com/project/mwijnands/simplecache"><img src="http://img.shields.io/appveyor/ci/mwijnands/simplecache.svg?style=flat" alt="Build status"></a> <a href="https://www.nuget.org/packages/XperiCode.SimpleCache"><img src="http://img.shields.io/nuget/v/XperiCode.SimpleCache.svg?style=flat" alt="NuGet version"></a></p>
 
 <h2>
-<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>The <code>SimpleCache</code> package is available at <a href="https://www.nuget.org/packages/XperiCode.SimpleCache">NuGet</a>. To install <code>SimpleCache</code>, run the following command in the <a href="http://docs.nuget.org/docs/start-here/using-the-package-manager-console">Package Manager Console</a>:</p>
+
+<blockquote>
+<h4>
+<a id="install-package-xpericodesimplecache" class="anchor" href="#install-package-xpericodesimplecache" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install-Package XperiCode.SimpleCache</h4>
+</blockquote>
+
+<h2>
+<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h2>
 
 <p>Get a value from cache and if it does not exist in cache yet, acquire it and put it in cache:</p>
 
-<div class="highlight highlight-csharp"><pre><span class="kt">var</span> <span class="n">person</span> <span class="p">=</span> <span class="n">MemoryCache</span><span class="p">.</span><span class="n">Default</span><span class="p">.</span><span class="n">Get</span><span class="p">(</span><span class="s">"Find"</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="n">_personRepository</span><span class="p">.</span><span class="n">Find</span><span class="p">());</span>
-</pre></div>
+<div class="highlight highlight-csharp"><pre><span class="pl-k">var</span> person = MemoryCache.Default.Get(<span class="pl-s1"><span class="pl-pds">"</span>Find<span class="pl-pds">"</span></span>, () =&gt; _personRepository.Find());</pre></div>
 
 <p>Same as above but the value will stay in the cache for only 15 minutes:</p>
 
-<div class="highlight highlight-csharp"><pre><span class="kt">var</span> <span class="n">person</span> <span class="p">=</span> <span class="n">MemoryCache</span><span class="p">.</span><span class="n">Default</span><span class="p">.</span><span class="n">Get</span><span class="p">(</span><span class="s">"Find"</span><span class="p">,</span> <span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromMinutes</span><span class="p">(</span><span class="m">15</span><span class="p">),</span> <span class="p">()</span> <span class="p">=&gt;</span>
-<span class="p">{</span>
-    <span class="k">return</span> <span class="n">_personRepository</span><span class="p">.</span><span class="n">Find</span><span class="p">();</span>
-<span class="p">});</span>
-</pre></div>
+<div class="highlight highlight-csharp"><pre><span class="pl-k">var</span> person = MemoryCache.Default.Get(<span class="pl-s1"><span class="pl-pds">"</span>Find<span class="pl-pds">"</span></span>, TimeSpan.FromMinutes(<span class="pl-c1">15</span>), () =&gt; 
+{
+    <span class="pl-k">return</span> _personRepository.Find();
+});</pre></div>
 
 <p>There are methods available to invalidate cache at an absolute expirationdate or when a certain file has changed as well. For all these methods there are <code>async</code> versions available in case the acquire method is <code>async</code>:</p>
 
-<div class="highlight highlight-csharp"><pre><span class="kt">var</span> <span class="n">person</span> <span class="p">=</span> <span class="k">await</span> <span class="n">MemoryCache</span><span class="p">.</span><span class="n">Default</span><span class="p">.</span><span class="n">GetAsync</span><span class="p">(</span><span class="s">"Find"</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> 
-<span class="p">{</span>
-    <span class="k">return</span> <span class="n">_personRepository</span><span class="p">.</span><span class="n">FindAsync</span><span class="p">();</span>
-<span class="p">});</span>
-</pre></div>
+<div class="highlight highlight-csharp"><pre><span class="pl-k">var</span> person = await MemoryCache.Default.GetAsync(<span class="pl-s1"><span class="pl-pds">"</span>Find<span class="pl-pds">"</span></span>, () =&gt; 
+{
+    <span class="pl-k">return</span> _personRepository.FindAsync();
+});</pre></div>
 
 <p>If the acquire method takes a long time to finish, the extension methods take care of locking (even the <code>async</code> versions) so the acquire method will not be called multiple times after the value is acquired. So if 10 visitors would visit a webpage with the following code at the same time, the <code>SomeLongRunningMethod</code> method and <code>_personRepository.Find()</code> call will only be called <strong>once</strong>:</p>
 
-<div class="highlight highlight-csharp"><pre><span class="kt">var</span> <span class="n">person</span> <span class="p">=</span> <span class="n">MemoryCache</span><span class="p">.</span><span class="n">Default</span><span class="p">.</span><span class="n">Get</span><span class="p">(</span><span class="s">"Find"</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> 
-<span class="p">{</span>
-    <span class="n">SomeLongRunningMethod</span><span class="p">();</span>
-    <span class="k">return</span> <span class="n">_personRepository</span><span class="p">.</span><span class="n">Find</span><span class="p">();</span>
-<span class="p">});</span>
-</pre></div>
+<div class="highlight highlight-csharp"><pre><span class="pl-k">var</span> person = MemoryCache.Default.Get(<span class="pl-s1"><span class="pl-pds">"</span>Find<span class="pl-pds">"</span></span>, () =&gt;
+{
+    SomeLongRunningMethod();
+    <span class="pl-k">return</span> _personRepository.Find();
+});</pre></div>
 
-<p>Please <a href="https://github.com/mwijnands/SimpleCache/issues">report issues on GitHub</a> if you find any. <a href="https://github.com/mwijnands/SimpleCache/pulls">Pull requests</a> are welcome as well!</p>
+<h2>
+<a id="collaboration" class="anchor" href="#collaboration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Collaboration</h2>
+
+<p>Please report issues if you find any. Pull requests are welcome!</p>
       </section>
     </div>
 
@@ -85,7 +96,17 @@
       </footer>
     </div>
 
-    
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-58216824-2");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
 
   </body>
 </html>
