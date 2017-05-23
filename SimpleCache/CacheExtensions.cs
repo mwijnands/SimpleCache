@@ -141,7 +141,12 @@ namespace XperiCode.SimpleCache
 
             if (cache.IsSet(cacheKey))
             {
-                return (T)cache.Get(cacheKey);
+                var acquiredValue = cache.Get(cacheKey);
+                if (acquiredValue is NullObject)
+                {
+                    return default(T);
+                }
+                return (T)acquiredValue;
             }
 
             using (await CacheLock.LockAsync(cacheKey))
