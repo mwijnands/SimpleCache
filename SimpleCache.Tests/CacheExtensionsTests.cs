@@ -160,6 +160,33 @@ namespace XperiCode.SimpleCache.Tests
             Assert.IsNull(person);
         }
 
+        [TestMethod]
+        public async Task GetFromCacheTwiceShouldCallAcquireAsyncOnlyOnceWhenResultIsNull()
+        {
+            var acquirerMock = CreateNullPersonAcquirerMock();
+            var acquirer = acquirerMock.Object;
+            var cache = CreateObjectCache();
+            string cacheKey = "FindPerson";
+
+            await cache.GetAsync(cacheKey, acquirer.AcquireAsync<Person>);
+            await cache.GetAsync(cacheKey, acquirer.AcquireAsync<Person>);
+
+            acquirerMock.Verify(a => a.AcquireAsync<Person>(), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task GetFromCacheShouldReturnMullWhenResultIsNullAsync()
+        {
+            var acquirerMock = CreateNullPersonAcquirerMock();
+            var acquirer = acquirerMock.Object;
+            var cache = CreateObjectCache();
+            string cacheKey = "FindPerson";
+
+            var person = await cache.GetAsync(cacheKey, acquirer.AcquireAsync<Person>);
+
+            Assert.IsNull(person);
+        }
+
         // TODO: Add tests for expirationdate, expirationperiod and filemonitoring.
         //       Also add tests for removing cacheentries and clearing cache for specific types.
     }
