@@ -106,7 +106,12 @@ namespace XperiCode.SimpleCache
 
             if (cache.IsSet(cacheKey))
             {
-                return (T)cache.Get(cacheKey);
+                var acquiredValue = cache.Get(cacheKey);
+                if (acquiredValue is NullObject)
+                {
+                    return default(T);
+                }
+                return (T)acquiredValue;
             }
 
             using (CacheLock.Lock(cacheKey))
@@ -117,8 +122,14 @@ namespace XperiCode.SimpleCache
                 }
 
                 var acquiredValue = acquire();
-
-                set(cacheKey, acquiredValue);
+                if (acquiredValue != null)
+                {
+                    set(cacheKey, acquiredValue);
+                }
+                else
+                {
+                    set(cacheKey, NullObject.Instance);
+                }
 
                 return acquiredValue;
             }
@@ -141,8 +152,14 @@ namespace XperiCode.SimpleCache
                 }
 
                 var acquiredValue = await acquireAsync();
-
-                set(cacheKey, acquiredValue);
+                if (acquiredValue != null)
+                {
+                    set(cacheKey, acquiredValue);
+                }
+                else
+                {
+                    set(cacheKey, NullObject.Instance);
+                }
 
                 return acquiredValue;
             }

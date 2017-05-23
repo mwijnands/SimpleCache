@@ -44,6 +44,7 @@
     <Compile Include="CacheExtensions.cs" />
     <Compile Include="Internal\CacheKeyGenerator.cs" />
     <Compile Include="Internal\CacheLock.cs" />
+    <Compile Include="Internal\NullObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

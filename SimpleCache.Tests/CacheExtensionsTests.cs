@@ -23,14 +23,33 @@ namespace XperiCode.SimpleCache.Tests
             acquirerMock
                 .Setup(a => a.AcquireAsync<Person>())
                 .CallBase();
-            
+
             acquirerMock
                 .Setup(a => a.LongRunningAcquireAsync<Person>())
                 .CallBase();
 
             return acquirerMock;
         }
-  
+
+        private Mock<NullPersonAcquirer> CreateNullPersonAcquirerMock()
+        {
+            var acquirerMock = new Mock<NullPersonAcquirer>();
+
+            acquirerMock
+                .Setup(a => a.Acquire<Person>())
+                .CallBase();
+
+            acquirerMock
+                .Setup(a => a.AcquireAsync<Person>())
+                .CallBase();
+
+            acquirerMock
+                .Setup(a => a.LongRunningAcquireAsync<Person>())
+                .CallBase();
+
+            return acquirerMock;
+        }
+
         private MemoryCache CreateObjectCache()
         {
             return new MemoryCache("test");
@@ -112,6 +131,33 @@ namespace XperiCode.SimpleCache.Tests
             await Task.WhenAll(person1Task, person2Task, person3Task, person4Task, person5Task);
 
             acquirerMock.Verify(a => a.LongRunningAcquireAsync<Person>(), Times.Once);
+        }
+
+        [TestMethod]
+        public void GetFromCacheTwiceShouldCallAcquireOnlyOnceWhenResultIsNull()
+        {
+            var acquirerMock = CreateNullPersonAcquirerMock();
+            var acquirer = acquirerMock.Object;
+            var cache = CreateObjectCache();
+            string cacheKey = "FindPerson";
+
+            cache.Get(cacheKey, acquirer.Acquire<Person>);
+            cache.Get(cacheKey, acquirer.Acquire<Person>);
+
+            acquirerMock.Verify(a => a.Acquire<Person>(), Times.Once);
+        }
+
+        [TestMethod]
+        public void GetFromCacheShouldReturnMullWhenResultIsNull()
+        {
+            var acquirerMock = CreateNullPersonAcquirerMock();
+            var acquirer = acquirerMock.Object;
+            var cache = CreateObjectCache();
+            string cacheKey = "FindPerson";
+
+            var person = cache.Get(cacheKey, acquirer.Acquire<Person>);
+
+            Assert.IsNull(person);
         }
 
         // TODO: Add tests for expirationdate, expirationperiod and filemonitoring.
